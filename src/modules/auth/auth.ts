@@ -5,7 +5,7 @@ const LOGIN_REQUEST = 'auth/LOGIN_REQUEST';
 const LOGIN_SUCCESS = 'auth/LOGIN_SUCCESS';
 const LOGIN_ERROR = 'auth/LOGIN_ERROR';
 
-type LoginErrorResponse = {}
+type LoginErrorResponse = any;
 
 
 // Action generator

@@ -1,15 +1,9 @@
 import React from "react";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Login from "./Login";
 
 const Main: React.FC = () => (
-  <BrowserRouter>
-    <Switch>
-      <Route path="/" exact={true} component={()=>(<div />)} />
-      <Route path="/login" component={Login} />
-      {/* TODO: other path handling */}
-    </Switch>
-  </BrowserRouter>
+  // TODO: redux 연결, Token관리
+  <Login/>
 );
 
 export default Main;
