@@ -45,7 +45,10 @@ const config: webpack.Configuration = {
     }),
     new MiniCssExtractPlugin({
       filename: "app.css"
-    })
+    }),
+    new webpack.DefinePlugin({
+      SOCKET_URL: JSON.stringify(process.env.SOCKET_URL),
+    }),
   ],
   resolve: {
     extensions: [".tsx", ".ts", ".js", ".css"],
