@@ -1,15 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from 'react-redux';
-import { createStore, applyMiddleware } from 'redux';
-import Thunk from 'redux-thunk';
+import { applyMiddleware, createStore } from 'redux';
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import rootReducer from './modules';
 import Main from "./component/Main";
+import socketMiddleware from "./modules/middleware/socket";
 
-const store = createStore(rootReducer, applyMiddleware(Thunk));
+const store = createStore(rootReducer, applyMiddleware(socketMiddleware));
 
-const App: React.SFC = () => (
+const App: React.FC = () => (
   <Provider store={store}>
     <BrowserRouter>
       <Switch>
