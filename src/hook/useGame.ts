@@ -1,9 +1,15 @@
-import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../modules";
-import { connectRequest, registerRequest } from "../modules/game/game";
+import { AuthInfo, connectRequest, GameStatus, registerRequest } from "../modules/game/game";
 
-const useGame = () => {
+type userGameTypes = {
+  auth: AuthInfo | null,
+  status: GameStatus | null,
+  sendConnectRequest: () => void,
+  sendRegisterRequest: (name: string, present: string) => void
+}
+
+const useGame = (): userGameTypes => {
   const { auth, status } = useSelector((state: RootState) => state.game);
   const dispatch = useDispatch();
 

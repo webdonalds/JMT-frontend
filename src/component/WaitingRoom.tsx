@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import useGame from '../hook/useGame';
 
 const WaitingRoom: React.FC = () => {
@@ -8,7 +8,7 @@ const WaitingRoom: React.FC = () => {
   const userView = (name: string, readied: boolean) => {
     return (
       <div key={name}>
-        <span>{name}</span>
+        <span className={myNickname==name ? "font-bold" : ""}>{name}</span>
         <span className="ml-5">{readied ? "READY" : ""}</span>
       </div>
     );

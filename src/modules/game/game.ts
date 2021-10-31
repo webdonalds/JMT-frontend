@@ -45,10 +45,17 @@ export enum RoomStatus {
   FINISHED,
 }
 
-type AuthInfo = {
+export type AuthInfo = {
   token: string,
   name: string,
 };
+
+export type GameStatus = {
+  roomStatus: RoomStatus,
+  users: string[],
+  readiedUsers: string[],
+  currentPresentInfo: PresentInfo | null,
+}
 
 type PresentInfo = {
   giverName: string,
@@ -59,12 +66,7 @@ type PresentInfo = {
 
 type GameState = {
   auth: AuthInfo | null,
-  status: {
-    roomStatus: RoomStatus,
-    users: string[],
-    readiedUsers: string[],
-    currentPresentInfo: PresentInfo | null,
-  } | null,
+  status: GameStatus | null,
 };
 
 const initialGameState = {
@@ -86,13 +88,18 @@ const gameReducer = createReducer<GameState, GameActions>(initialGameState, {
       currentPresentInfo: null,
     },
   }),
-  [REGISTER_REQUEST]: (state, action) => ({
-    ...state,
-    auth: {
-      token: state.auth!.token,
-      name: action.payload.nickname
+  [REGISTER_REQUEST]: (state, action) => {
+    if (state.auth == null) {
+      return state
     }
-  }),
+    return {
+      ...state,
+      auth: {
+        token: state.auth.token,
+        name: action.payload.nickname
+      }
+    }
+  },
   [READY_STATUS_CHANGE]: (state, action) => ({
     ...state,
     status: {
