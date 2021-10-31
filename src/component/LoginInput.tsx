@@ -1,5 +1,4 @@
 import React from "react";
-import "./LoginInput.css";
 
 type LoginInputProps = {
   handleChange: (value: string) => void,
@@ -12,7 +11,7 @@ const LoginInput: React.FC<LoginInputProps> = (props) => {
     props.handleChange(e.target.value);
   };
   return (
-    <div className="login-input-container">
+    <div className="mt-10">
       <span>{props.inputName}: </span>
       <input type="text" value={props.inputValue} onChange={onChange} />
     </div>

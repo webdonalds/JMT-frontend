@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import LoginInput from './LoginInput';
-import './Login.css';
 
 const Login: React.FC = () => {
   const nameInputText = '이름';
@@ -20,12 +19,12 @@ const Login: React.FC = () => {
   }
 
   return (
-    <div className="login-container">
+    <div className="h-full pt-40 text-center">
       <h1>JMT</h1>
       <div>
         <LoginInput inputName={nameInputText} inputValue={name} handleChange={handleNameChange} />
         <LoginInput inputName={presentInputText} inputValue={present} handleChange={handlePresentChange} />
-        <button type="button" className="btn btn-success login-button" onClick={handleLogin}>시작</button>
+        <button type="button" className="mt-10" onClick={handleLogin}>시작</button>
       </div>
     </div>
   );
