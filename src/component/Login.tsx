@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import LoginInput from './LoginInput';
+import useGame from '../hook/useGame';
 
 const Login: React.FC = () => {
+  const { sendRegisterRequest } = useGame();
+
   const nameInputText = '이름';
   const [name, setName] = useState<string>('');
   const handleNameChange = (value: string) => {
@@ -13,17 +15,29 @@ const Login: React.FC = () => {
     setPresent(value);
   };
 
+  const LoginInput = (title: string, value: string, handleChange: (value: string) => void) => {
+    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      handleChange(e.target.value);
+    };
+
+    return (
+      <div className="mt-10">
+        <span>{title}: </span>
+        <input type="text" value={value} onChange={onChange} />
+      </div>
+    );
+  };
+
   const handleLogin = () => {
-    // TODO
-    console.log(name, present);
+    sendRegisterRequest(name, present);
   }
 
   return (
     <div className="h-full pt-40 text-center">
       <h1>JMT</h1>
       <div>
-        <LoginInput inputName={nameInputText} inputValue={name} handleChange={handleNameChange} />
-        <LoginInput inputName={presentInputText} inputValue={present} handleChange={handlePresentChange} />
+        { LoginInput(nameInputText, name, handleNameChange) }
+        { LoginInput(presentInputText, present, handlePresentChange) }
         <button type="button" className="mt-10" onClick={handleLogin}>시작</button>
       </div>
     </div>

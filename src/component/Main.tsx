@@ -2,6 +2,7 @@ import React from "react";
 import useGame from "../hook/useGame";
 import { RoomStatus } from "../modules/game/game";
 import Login from "./Login";
+import WaitingRoom from './WaitingRoom';
 
 const Main: React.FC = () => {
   const { auth, status, sendConnectRequest } = useGame();
@@ -12,10 +13,13 @@ const Main: React.FC = () => {
     return <></>;
   }
 
-  if (status?.roomStatus === RoomStatus.CONNECT) {
+  if (status?.roomStatus === RoomStatus.CONNECTED) {
     return <Login />
   }
 
+  if (status?.roomStatus === RoomStatus.REGISTER) {
+    return <WaitingRoom />
+  }
   // TODO
   return <></>
 };

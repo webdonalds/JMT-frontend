@@ -1,5 +1,5 @@
 import { Dispatch } from "react";
-import { connect, GameActions } from "../game/game";
+import { connected, GameActions, CONNECT_REQUEST, REGISTER_REQUEST, readyStatusChange } from "../game/game";
 import { v4 as uuidv4 } from "uuid";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -68,10 +68,19 @@ const socketMiddleware = () => {
       case ReceiveEventType.CONNECTED:
         const token: string = JSON.parse(messageResponse.data).payload.token;
         localStorage.setItem("token", token);
-        store.dispatch(connect(token));
+        store.dispatch(connected(token));
         break;
       case ReceiveEventType.WAITING:
-        // TODO
+        // TODO: Register을 하지 않은 상태에도 해당 이벤트가 내려옴
+        // TODO: 서버에서 해당 상태에서는 내려오지 않게 수정하거나, 닉네임 중복검사를 하고 본인 닉네임이 있는지 확인이 필요함.
+        const usersInfo = JSON.parse(messageResponse.data).payload;
+        const users: string[] = usersInfo.users;
+        const readiedUsers: string[] = usersInfo.readiedUsers;
+
+        const myNickname: string | null = localStorage.getItem("nickname");
+        if (myNickname != null && users.includes(myNickname)) {
+          store.dispatch(readyStatusChange(users, readiedUsers));
+        }
         break;
     }
   };
@@ -83,7 +92,7 @@ const socketMiddleware = () => {
   // the middleware part of this function
   return (store: any) => (next: Dispatch<GameActions>) => (action: GameActions) => {
     switch (action.type) {
-      case 'CONNECT_REQUEST':
+      case CONNECT_REQUEST:
         if (ws !== null) {
           ws.close();
         }
@@ -94,7 +103,16 @@ const socketMiddleware = () => {
         ws.onclose = onClose();
         ws.onopen = onOpen(token);
         ws.onerror = onError();
+
+        // TODO: nickname 불러오기
         break;
+      case REGISTER_REQUEST:
+        localStorage.setItem("nickname", action.payload.nickname);
+        ws?.send(makeMessage(SendEventType.REGISTER, {
+          nickname: action.payload.nickname,
+          present: action.payload.present
+        }));
+        return next(action);
       default:
         return next(action);
     }

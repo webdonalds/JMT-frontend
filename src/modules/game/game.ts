@@ -1,8 +1,10 @@
 import { createAction, ActionType, createReducer } from 'typesafe-actions';
 
 // Action type
-const CONNECT_REQUEST = 'CONNECT_REQUEST';
-const CONNECT = 'CONNECT';
+export const CONNECT_REQUEST = 'CONNECT_REQUEST';
+export const CONNECTED = 'CONNECTED';
+export const REGISTER_REQUEST = 'REGISTER_REQUEST';
+export const READY_STATUS_CHANGE = 'READY_STATUS_CHANGE';
 
 // Action generator
 export const connectRequest = createAction(
@@ -11,21 +13,34 @@ export const connectRequest = createAction(
     token: token
   })
 )();
-export const connect = createAction(
-  CONNECT,
+export const connected = createAction(
+  CONNECTED,
   (token: string) => ({ 
     token: token 
   })
 )();
+export const registerRequest = createAction(
+  REGISTER_REQUEST,
+  (nickname: string, present: string) => ({
+    nickname: nickname,
+    present: present
+  })
+)();
+export const readyStatusChange = createAction(
+  READY_STATUS_CHANGE,
+  (users: string[], readiedUsers: string[]) => ({
+    users: users,
+    readiedUsers: readiedUsers
+  })
+)();
 
-const actions = { connectRequest, connect };
+const actions = { connectRequest, connected, registerRequest, readyStatusChange };
 export type GameActions = ActionType<typeof actions>;
 
 // State
 export enum RoomStatus {
-  CONNECT,
+  CONNECTED,
   REGISTER,
-  READY,
   START,
   FINISHED,
 }
@@ -46,6 +61,8 @@ type GameState = {
   auth: AuthInfo | null,
   status: {
     roomStatus: RoomStatus,
+    users: string[],
+    readiedUsers: string[],
     currentPresentInfo: PresentInfo | null,
   } | null,
 };
@@ -57,16 +74,34 @@ const initialGameState = {
 
 // Reducer
 const gameReducer = createReducer<GameState, GameActions>(initialGameState, {
-  [CONNECT]: (_, action) => ({
+  [CONNECTED]: (_, action) => ({
     auth: {
       token: action.payload.token,
       name: "",
     },
     status: {
-      roomStatus: RoomStatus.CONNECT,
+      roomStatus: RoomStatus.CONNECTED,
+      users: [],
+      readiedUsers: [],
       currentPresentInfo: null,
     },
   }),
+  [REGISTER_REQUEST]: (state, action) => ({
+    ...state,
+    auth: {
+      token: state.auth!.token,
+      name: action.payload.nickname
+    }
+  }),
+  [READY_STATUS_CHANGE]: (state, action) => ({
+    ...state,
+    status: {
+      roomStatus: RoomStatus.REGISTER,
+      users: action.payload.users,
+      readiedUsers: action.payload.readiedUsers,
+      currentPresentInfo: null,
+    }
+  })
 });
 
 export default gameReducer;
