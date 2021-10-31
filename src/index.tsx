@@ -7,6 +7,8 @@ import rootReducer from './modules';
 import Main from "./component/Main";
 import socketMiddleware from "./modules/middleware/socket";
 
+import "./index.css";
+
 const store = createStore(rootReducer, applyMiddleware(socketMiddleware));
 
 const App: React.FC = () => (
