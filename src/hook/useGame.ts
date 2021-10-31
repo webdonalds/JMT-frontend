@@ -1,12 +1,13 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../modules";
-import { AuthInfo, connectRequest, GameStatus, registerRequest } from "../modules/game/game";
+import { AuthInfo, changeMyReadyStatus, connectRequest, GameStatus, registerRequest } from "../modules/game/game";
 
 type userGameTypes = {
   auth: AuthInfo | null,
   status: GameStatus | null,
   sendConnectRequest: () => void,
-  sendRegisterRequest: (name: string, present: string) => void
+  sendRegisterRequest: (name: string, present: string) => void,
+  changeReady: (ready: boolean) => void,
 }
 
 const useGame = (): userGameTypes => {
@@ -22,11 +23,16 @@ const useGame = (): userGameTypes => {
     dispatch(registerRequest(name, present));
   }
 
+  const changeReady = (ready: boolean) => {
+    dispatch(changeMyReadyStatus(ready));
+  }
+
   return {
     auth,
     status,
     sendConnectRequest,
     sendRegisterRequest,
+    changeReady,
   }
 }
 

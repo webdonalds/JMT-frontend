@@ -4,7 +4,8 @@ import { createAction, ActionType, createReducer } from 'typesafe-actions';
 export const CONNECT_REQUEST = 'CONNECT_REQUEST';
 export const CONNECTED = 'CONNECTED';
 export const REGISTER_REQUEST = 'REGISTER_REQUEST';
-export const READY_STATUS_CHANGE = 'READY_STATUS_CHANGE';
+export const READY_STATUS_CHANGED = 'READY_STATUS_CHANGED';
+export const CHANGE_MY_READY_STATUS = 'CHANGE_MY_READY_STATUS';
 
 // Action generator
 export const connectRequest = createAction(
@@ -26,15 +27,21 @@ export const registerRequest = createAction(
     present: present
   })
 )();
-export const readyStatusChange = createAction(
-  READY_STATUS_CHANGE,
+export const readyStatusChanged = createAction(
+  READY_STATUS_CHANGED,
   (users: string[], readiedUsers: string[]) => ({
     users: users,
     readiedUsers: readiedUsers
   })
 )();
+export const changeMyReadyStatus = createAction(
+  CHANGE_MY_READY_STATUS,
+  (ready: boolean) => ({
+    ready: ready
+  })
+)();
 
-const actions = { connectRequest, connected, registerRequest, readyStatusChange };
+const actions = { connectRequest, connected, registerRequest, readyStatusChanged, changeMyReadyStatus };
 export type GameActions = ActionType<typeof actions>;
 
 // State
@@ -100,7 +107,7 @@ const gameReducer = createReducer<GameState, GameActions>(initialGameState, {
       }
     }
   },
-  [READY_STATUS_CHANGE]: (state, action) => ({
+  [READY_STATUS_CHANGED]: (state, action) => ({
     ...state,
     status: {
       roomStatus: RoomStatus.REGISTER,

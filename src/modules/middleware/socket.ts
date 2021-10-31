@@ -1,5 +1,5 @@
 import { Dispatch } from "react";
-import { connected, GameActions, CONNECT_REQUEST, REGISTER_REQUEST, readyStatusChange } from "../game/game";
+import { connected, GameActions, CONNECT_REQUEST, REGISTER_REQUEST, readyStatusChanged, CHANGE_MY_READY_STATUS } from "../game/game";
 import { v4 as uuidv4 } from "uuid";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -79,7 +79,7 @@ const socketMiddleware = () => {
 
         const myNickname: string | null = localStorage.getItem("nickname");
         if (myNickname != null && users.includes(myNickname)) {
-          store.dispatch(readyStatusChange(users, readiedUsers));
+          store.dispatch(readyStatusChanged(users, readiedUsers));
         }
         break;
     }
@@ -112,6 +112,9 @@ const socketMiddleware = () => {
           nickname: action.payload.nickname,
           present: action.payload.present
         }));
+        return next(action);
+      case CHANGE_MY_READY_STATUS:
+        ws?.send(makeMessage(SendEventType.READY, {}))
         return next(action);
       default:
         return next(action);
